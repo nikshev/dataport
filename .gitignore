@@ -1,12 +1,13 @@
 logs
 target
 /.idea
+/.history
 /.idea_modules
 /.classpath
 /.project
 /.settings
 /RUNNING_PID
 /bin
-/conf
 /libexec
 /project
+.gitignore

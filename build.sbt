@@ -13,3 +13,4 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 
+libraryDependencies += "net.cakesolutions" %% "scala-kafka-client" % "0.11.0.0"

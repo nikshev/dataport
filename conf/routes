@@ -1,0 +1,5 @@
+# Routes
+
+#REST methods
+POST     /rest/add                   controllers.RestController.add
+GET      /rest/prediction            controllers.RestController.prediction
