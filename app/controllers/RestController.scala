@@ -17,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RestController @Inject()(configuration: play.api.Configuration)(implicit exec: ExecutionContext) extends Controller {
 
   /**
-    * Add information to Kafka and Cassandra
+    * Add information from metatrader to Kafka and Cassandra
     * @return
     */
   def add = Action.async(parse.json) { request =>
@@ -27,7 +27,6 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
       case JsSuccess(income, _) =>
         val sendToKafkaFuture = Future {
           KafkaService.send(config.getKafkaBootstrapServers, config.getKafkaIncomeTopic, income.hashCode().toString, request.body.toString)
-          true
         }
         val sendToCassandraFuture = Future {
           true //TO-DO add Cassandra methods for save data
@@ -43,10 +42,20 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
              Logger.debug(s"Can't insert message:"+request.body.toString)
              Created(s"Can't insert message:"+request.body.toString)
            }
+
         }
       case JsError(errors) =>
         Future.successful(BadRequest("Could not build a registry from the json provided. " + errors.mkString))
     }
   }
+
+  /**
+    * Get prediction from Cassandra
+    * @return
+    */
+  def prediction = Action {
+    Ok("Prediction method")
+  }
+
 
 }

@@ -12,13 +12,13 @@ class Config (configuration: play.api.Configuration) {
     */
   def getKafkaBootstrapServers: String = {
 
-    val serverField = configuration.getString("bootstrapServer")
+    val serverField = configuration.getString("kafka.bootstrapServer")
     val server = serverField match {
       case None => "localhost"
       case Some(server) => server
     }
 
-    val portField = configuration.getString("bootstrapServerPort")
+    val portField = configuration.getString("kafka.bootstrapServerPort")
     val port = portField match {
       case None => "9092"
       case Some(port) => port
@@ -33,9 +33,9 @@ class Config (configuration: play.api.Configuration) {
     */
   def getKafkaIncomeTopic: String = {
 
-    val topic = configuration.getString("incomeTopic")
+    val topic = configuration.getString("kafka.incomeTopic")
     topic match {
-      case None => "incomeTopic"
+      case None => "income"
       case Some(topic) => topic
     }
   }
