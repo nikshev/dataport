@@ -1,9 +1,5 @@
 package services
 
-
-//import cakesolutions.kafka.KafkaProducer.Conf
-//import cakesolutions.kafka.{KafkaProducer, KafkaProducerRecord}
-//import org.apache.kafka.clients.producer._
 import java.util.Properties
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}

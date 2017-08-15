@@ -32,7 +32,6 @@ class Config (configuration: play.api.Configuration) {
     * @return income topic name
     */
   def getKafkaIncomeTopic: String = {
-
     val topic = configuration.getString("kafka.incomeTopic")
     topic match {
       case None => "income"

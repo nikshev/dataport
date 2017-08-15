@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 
+import db.phantom.connector.Connector
 import models.Income
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
@@ -54,6 +55,7 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
     * @return
     */
   def prediction = Action {
+    val conn = Connector.connector
     Ok("Prediction method")
   }
 
