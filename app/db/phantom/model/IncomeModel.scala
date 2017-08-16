@@ -20,6 +20,34 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     object high extends DoubleColumn
     object low extends DoubleColumn
     object close extends DoubleColumn
+    object i0 extends DoubleColumn
+    object i1 extends DoubleColumn
+    object i2 extends DoubleColumn
+    object i3 extends DoubleColumn
+    object i4 extends DoubleColumn
+    object i5 extends DoubleColumn
+    object i6 extends DoubleColumn
+    object i7 extends DoubleColumn
+    object i8 extends DoubleColumn
+    object i9 extends DoubleColumn
+    object i10 extends DoubleColumn
+    object i11 extends DoubleColumn
+    object i12 extends DoubleColumn
+    object i13 extends DoubleColumn
+    object i14 extends DoubleColumn
+    object i15 extends DoubleColumn
+    object i16 extends DoubleColumn
+    object i17 extends DoubleColumn
+    object i18 extends DoubleColumn
+    object i19 extends DoubleColumn
+    object i20 extends DoubleColumn
+    object levelUp extends DoubleColumn
+    object correctionLevelUp extends DoubleColumn
+    object levelDown extends DoubleColumn
+    object correctionLevelDown extends DoubleColumn
+    object prediction extends IntColumn
+    object label extends IntColumn
+    object created_at extends DateTimeColumn
 
 
     def store(income: Income): Future[ResultSet] = {

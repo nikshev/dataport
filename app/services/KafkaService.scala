@@ -17,7 +17,7 @@ object KafkaService  {
     * @param value - message
     * @return
     */
-   def send(server:String, topic:String, key:String, value:String):Boolean = {
+   def send(server:String, topic:String, key:String, value:String) = {
 
     val  props = new Properties()
     props.put("bootstrap.servers", server) //Docker return container id and you must add container id to hosts
@@ -33,8 +33,6 @@ object KafkaService  {
     producer.send(record)
 
     producer.close()
-
-    true
   }
 }
 

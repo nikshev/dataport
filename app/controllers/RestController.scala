@@ -2,14 +2,13 @@ package controllers
 
 import javax.inject._
 
-import db.phantom.connector.Connector
-import models.Income
+import db.phantom.entity.Income
+import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc._
-import play.api.Logger
-import services.{Config, KafkaService}
+import services.{CassandraService, Config, KafkaService}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 /**
  * This controller creates an `Action` to handle REST HTTP requests
@@ -21,32 +20,17 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
     * Add information from metatrader to Kafka and Cassandra
     * @return
     */
-  def add = Action.async(parse.json) { request =>
+  def add = Action(parse.json) { request =>
     val config = new Config(configuration)
 
     Json.fromJson[Income](request.body) match {
       case JsSuccess(income, _) =>
-        val sendToKafkaFuture = Future {
-          KafkaService.send(config.getKafkaBootstrapServers, config.getKafkaIncomeTopic, income.hashCode().toString, request.body.toString)
-        }
-        val sendToCassandraFuture = Future {
-          true //TO-DO add Cassandra methods for save data
-        }
-        for {
-          sendToKafka <- sendToKafkaFuture
-          sendToCassandra <- sendToCassandraFuture
-        } yield {
-           if (sendToKafka && sendToKafka == sendToCassandra) {
-             Logger.debug(s"Successfully insert message:"+request.body.toString)
-             Created(s"Successfully insert message:"+request.body.toString)
-           } else {
-             Logger.debug(s"Can't insert message:"+request.body.toString)
-             Created(s"Can't insert message:"+request.body.toString)
-           }
-
-        }
+        KafkaService.send(config.getKafkaBootstrapServers, config.getKafkaIncomeTopic, income.hashCode().toString, request.body.toString)
+        CassandraService.addIncome(income)
+        Logger.debug(s"Can't insert message:"+request.body.toString)
+        Created(s"Can't insert message:"+request.body.toString)
       case JsError(errors) =>
-        Future.successful(BadRequest("Could not build a registry from the json provided. " + errors.mkString))
+        BadRequest("Could not build a registry from the json provided. " + errors.mkString)
     }
   }
 
@@ -55,7 +39,6 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
     * @return
     */
   def prediction = Action {
-    val conn = Connector.connector
     Ok("Prediction method")
   }
 
