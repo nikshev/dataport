@@ -10,7 +10,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
-import services.{CassandraService, Config}
+import services.{CassandraService, KafkaService}
 
 import scala.concurrent.ExecutionContext
 
@@ -25,7 +25,6 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
     * @return
     */
   def add = Action(parse.json) { request =>
-    val config = new Config(configuration)
 
     implicit val locationReads: Reads[Income] =(
       (__ \ "id").read[UUID].orElse(Reads.pure(java.util.UUID.randomUUID)) and
@@ -49,7 +48,7 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
 
     Json.fromJson[Income](request.body) match {
       case JsSuccess(income, _) =>
-        //KafkaService.send(config.getKafkaBootstrapServers, config.getKafkaIncomeTopic, income.hashCode().toString, request.body.toString)
+        KafkaService.send(income.hashCode().toString, request.body.toString)
         CassandraService.addIncome(income)
         Logger.debug(s"Message processed:"+request.body.toString)
         Created(s"Message processed:"+request.body.toString)
