@@ -13,47 +13,41 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     override def tableName: String = "income"
 
     object id extends UUIDColumn with PartitionKey
-
+    object symbol extends StringColumn
+    object timeframe extends StringColumn
     object date extends StringColumn
     object time extends StringColumn
     object open extends DoubleColumn
     object high extends DoubleColumn
     object low extends DoubleColumn
     object close extends DoubleColumn
-    object i0 extends DoubleColumn
-    object i1 extends DoubleColumn
-    object i2 extends DoubleColumn
-    object i3 extends DoubleColumn
-    object i4 extends DoubleColumn
-    object i5 extends DoubleColumn
-    object i6 extends DoubleColumn
-    object i7 extends DoubleColumn
-    object i8 extends DoubleColumn
-    object i9 extends DoubleColumn
-    object i10 extends DoubleColumn
-    object i11 extends DoubleColumn
-    object i12 extends DoubleColumn
-    object i13 extends DoubleColumn
-    object i14 extends DoubleColumn
-    object i15 extends DoubleColumn
-    object i16 extends DoubleColumn
-    object i17 extends DoubleColumn
-    object i18 extends DoubleColumn
-    object i19 extends DoubleColumn
-    object i20 extends DoubleColumn
+    object indicators extends ListColumn[Double]
     object levelUp extends DoubleColumn
     object correctionLevelUp extends DoubleColumn
     object levelDown extends DoubleColumn
     object correctionLevelDown extends DoubleColumn
     object prediction extends IntColumn
     object label extends IntColumn
-    object created_at extends DateTimeColumn
+    object createdAt extends DateTimeColumn
 
 
     def store(income: Income): Future[ResultSet] = {
       insert
         .value(_.id, income.id)
+        .value(_.symbol, income.symbol)
+        .value(_.timeframe, income.timeframe)
         .value(_.date, income.date)
+        .value(_.time, income.time)
+        .value(_.open, income.open)
+        .value(_.high, income.high)
+        .value(_.low, income.low)
+        .value(_.close, income.close)
+        .value(_.indicators, income.indicators)
+        .value(_.levelUp, income.levelUp)
+        .value(_.correctionLevelUp, income.correctionLevelUp)
+        .value(_.levelDown, income.levelDown)
+        .value(_.correctionLevelDown, income.correctionLevelDown)
+        .value(_.createdAt, income.createdAt)
         .future()
     }
 
