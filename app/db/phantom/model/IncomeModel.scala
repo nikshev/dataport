@@ -26,11 +26,15 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     object correctionLevelUp extends DoubleColumn
     object levelDown extends DoubleColumn
     object correctionLevelDown extends DoubleColumn
-    object prediction extends IntColumn
-    object label extends IntColumn
+    object prediction extends OptionalIntColumn
+    object label extends OptionalIntColumn
     object createdAt extends DateTimeColumn
 
-
+    /**
+      * Store information to the Cassandra database
+      * @param income
+      * @return
+      */
     def store(income: Income): Future[ResultSet] = {
       insert
         .value(_.id, income.id)
@@ -51,12 +55,59 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
         .future()
     }
 
+    /**
+      * Get one row by ID
+      * @param id
+      * @return
+      */
     def getById(id: UUID): Future[Option[Income]] = {
       select.where(_.id eqs id).one()
     }
 
+    /**
+      * Get row set with limit
+      * @param limit
+      * @return
+      */
     def getLimit(limit: Int): Future[ResultSet] = {
       select.limit(limit).future()
     }
 
+    /**
+      * Overriden method fromRow
+      * @param row
+      * @return
+      */
+    override def fromRow(row: Row): Income = {
+        Income(
+            id(row),
+            symbol(row),
+            timeframe(row),
+            date(row),
+            time(row),
+            open(row),
+            high(row),
+            low(row),
+            close(row),
+            indicators(row),
+            levelUp(row),
+            correctionLevelUp(row),
+            levelDown(row),
+            correctionLevelDown(row),
+            prediction(row).getOrElse(0),
+            label(row).getOrElse(0),
+            createdAt(row))
+    }
+
+    /**
+      * Delete row by ID
+      * @param id
+      * @return
+      */
+    def deleteById(id: UUID): Future[ResultSet] = {
+        delete
+          .where(_.id eqs id)
+          .consistencyLevel_=(ConsistencyLevel.ONE)
+          .future()
+    }
 }

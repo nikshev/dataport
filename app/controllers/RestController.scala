@@ -4,7 +4,7 @@ import java.util.UUID
 import javax.inject._
 
 import db.phantom.entity.Income
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
@@ -43,7 +43,7 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
       (__ \ "correctionLevelDown").read[Double] and
       (__ \ "prediction").read[Int].orElse(Reads.pure(0)) and
       (__ \ "label").read[Int].orElse(Reads.pure(0)) and
-      (__ \ "createdAt").read[DateTime].orElse(Reads.pure(new DateTime()))
+      (__ \ "createdAt").read[DateTime].orElse(Reads.pure(new DateTime(DateTimeZone.UTC)))
       )(Income.apply _)
 
     Json.fromJson[Income](request.body) match {
