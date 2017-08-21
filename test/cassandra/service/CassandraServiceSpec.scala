@@ -45,24 +45,24 @@ class CassandraServiceSpec  extends CassandraSpec {
    }
 
   "Read income record from Cassandra and compare" should " must be successful" in {
-    val record_read = CassandraService.getIncome(recordUUID)
+    val recordRead = CassandraService.getIncome(recordUUID)
 
-    whenReady(record_read){ income =>
+    whenReady(recordRead){ income =>
       income shouldBe defined
-      income.get shouldEqual record
+      Option(income.get) shouldEqual Option(record)
     }
   }
 
   "Get result set from cassandra" should " must be successful" in {
-    val result_set = CassandraService.getIncomes(1)
-    whenReady(result_set){ results =>
+    val resultSet = CassandraService.getIncomes(1)
+    whenReady(resultSet){ results =>
       results.isFullyFetched shouldBe true
     }
   }
 
   "Delete record from Cassandra " should "must be succesful" in {
-    var record_delete = CassandraService.delIncome(recordUUID)
-    whenReady(record_delete){ results =>
+    val recordDelete = CassandraService.delIncome(recordUUID)
+    whenReady(recordDelete){ results =>
       results.isExhausted shouldBe true
     }
   }
