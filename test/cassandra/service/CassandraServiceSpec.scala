@@ -30,7 +30,7 @@ class CassandraServiceSpec  extends CassandraSpec {
      high=1.2732,
      low=1.2732,
      close=1.2732,
-     indicators=List(1,2,3,4,5,6,7,8,9,10),
+     rawFeatures=List(1,2,3,4,5,6,7,8,9,10),
      levelUp=1.2732,
      correctionLevelUp=1.2732,
      levelDown=1.2732,

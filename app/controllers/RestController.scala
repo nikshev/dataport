@@ -26,7 +26,7 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
     */
   def add = Action(parse.json) { request =>
 
-    implicit val locationReads: Reads[Income] =(
+    implicit val incomeReads: Reads[Income] =(
       (__ \ "id").read[UUID].orElse(Reads.pure(java.util.UUID.randomUUID)) and
       (__ \ "symbol").read[String] and
       (__ \ "timeframe").read[String] and
@@ -46,9 +46,31 @@ class RestController @Inject()(configuration: play.api.Configuration)(implicit e
       (__ \ "createdAt").read[DateTime].orElse(Reads.pure(new DateTime(DateTimeZone.UTC)))
       )(Income.apply _)
 
+    implicit val incomeWrites = new Writes[Income] {
+      def writes(income: Income) = Json.obj(
+        "id"-> income.id,
+        "symbol"->income.symbol,
+        "timeframe"->income.timeframe,
+        "date"->income.date,
+        "time"->income.time,
+        "open"->income.open,
+        "high"->income.high,
+        "low"->income.low,
+        "close"->income.close,
+        "rawFeatures"->income.rawFeatures,
+        "levelUp"->income.levelUp,
+        "correctionLevelUp"->income.correctionLevelUp,
+        "levelDown"->income.levelDown,
+        "correctionLevelDown"->income.correctionLevelDown,
+        "prediction"->income.prediction,
+        "label"->income.label,
+        "createdAt"-> income.createdAt
+      )
+    }
+
     Json.fromJson[Income](request.body) match {
       case JsSuccess(income, _) =>
-        KafkaService.send(income.hashCode().toString, request.body.toString)
+        KafkaService.send(income.hashCode().toString, Json.toJson(income).toString)
         CassandraService.addIncome(income)
         Logger.debug(s"Message processed:"+request.body.toString)
         Created(s"Message processed:"+request.body.toString)

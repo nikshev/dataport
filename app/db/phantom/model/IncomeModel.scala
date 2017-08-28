@@ -21,7 +21,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     object high extends DoubleColumn
     object low extends DoubleColumn
     object close extends DoubleColumn
-    object indicators extends ListColumn[Double]
+    object rawFeatures extends ListColumn[Double]
     object levelUp extends DoubleColumn
     object correctionLevelUp extends DoubleColumn
     object levelDown extends DoubleColumn
@@ -46,7 +46,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
         .value(_.high, income.high)
         .value(_.low, income.low)
         .value(_.close, income.close)
-        .value(_.indicators, income.indicators)
+        .value(_.rawFeatures, income.rawFeatures)
         .value(_.levelUp, income.levelUp)
         .value(_.correctionLevelUp, income.correctionLevelUp)
         .value(_.levelDown, income.levelDown)
@@ -89,7 +89,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
             high(row),
             low(row),
             close(row),
-            indicators(row),
+            rawFeatures(row),
             levelUp(row),
             correctionLevelUp(row),
             levelDown(row),

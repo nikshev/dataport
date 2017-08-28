@@ -19,7 +19,7 @@ case class Income (
                     high:Double,
                     low:Double,
                     close:Double,
-                    indicators:List[Double],
+                    rawFeatures:List[Double],
                     levelUp:Double,
                     correctionLevelUp:Double,
                     levelDown:Double,
