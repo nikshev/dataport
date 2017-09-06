@@ -67,4 +67,10 @@ class CassandraServiceSpec  extends CassandraSpec {
     }
   }
 
+  "Get predictions rows greater than some timestamp by symbol" should " must be succesful" in {
+    CassandraService.addIncome(record)
+    val resultSet = CassandraService.getRowsBySymbol1H(record.symbol)
+    println(resultSet)
+  }
+
 }

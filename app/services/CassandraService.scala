@@ -1,4 +1,5 @@
 package services
+import java.time.Instant
 import java.util.UUID
 
 import com.outworkers.phantom.connectors.KeySpace
@@ -60,4 +61,14 @@ object CassandraService {
     LocalIncomeDatabase.Incomes.deleteById(id)
   }
 
+
+  def getRowsBySymbol1H(symbol: String) ={
+    val timestamp=Instant.now.getEpochSecond-3600L
+    ""
+  }
+
+  def getRowsBySymbol2H(symbol: String) ={
+    val timestamp=Instant.now.getEpochSecond-72000L
+    ""
+  }
 }
