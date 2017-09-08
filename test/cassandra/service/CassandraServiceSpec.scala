@@ -2,6 +2,7 @@ package cassandra.service
 
 import cassandra.utils.CassandraSpec
 import db.phantom.entity.Income
+import db.phantom.model.IncomeModel
 import org.joda.time.{DateTime, DateTimeZone}
 import services.CassandraService
 
@@ -67,10 +68,9 @@ class CassandraServiceSpec  extends CassandraSpec {
     }
   }
 
-  "Get predictions rows greater than some timestamp by symbol" should " must be succesful" in {
+  "Get predictions top 1000 rows " should " must be succesful" in {
     CassandraService.addIncome(record)
-    val resultSet = CassandraService.getRowsBySymbol1H(record.symbol)
-    println(resultSet)
+    CassandraService.getLastPredictions(100)
   }
 
 }

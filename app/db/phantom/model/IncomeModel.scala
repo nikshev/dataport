@@ -14,7 +14,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     override def tableName: String = "income"
 
     object id extends UUIDColumn with PartitionKey
-    object symbol extends StringColumn with PartitionKey
+    object symbol extends StringColumn
     object timeframe extends StringColumn
     object date extends StringColumn
     object time extends StringColumn
@@ -29,7 +29,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     object correctionLevelDown extends DoubleColumn
     object prediction extends OptionalIntColumn
     object label extends OptionalIntColumn
-    object createdAt extends DateTimeColumn with PartitionKey
+    object createdAt extends DateTimeColumn with ClusteringOrder with Descending
 
     /**
       * Store information to the Cassandra database
@@ -62,7 +62,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
       * @return
       */
     def getById(id: UUID): Future[Option[Income]] = {
-      select.where(_.id eqs id).one()
+      select.where(_.id eqs id).allowFiltering.one()
     }
 
     /**
@@ -73,6 +73,7 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
     def getLimit(limit: Int): Future[ResultSet] = {
       select.limit(limit).future()
     }
+
 
     /**
       * Overriden method fromRow
@@ -110,18 +111,5 @@ abstract class IncomeModel extends CassandraTable[IncomeModel, Income] with Root
           .where(_.id eqs id)
           .consistencyLevel_=(ConsistencyLevel.ONE)
           .future()
-    }
-
-    /**
-      * Get rows by symbol which has created at greater than timestamp in params
-      * @param symbol
-      * @param timestamp
-      * @return
-      */
-    def getBySymbol(symbol:String, timestamp:DateTime): Future[ResultSet] = {
-        /**
-          * TO-DO add keys for multi user support
-          */
-        select.where(_.symbol eqs symbol).and(_.createdAt > timestamp).future
     }
 }

@@ -1,5 +1,4 @@
 package services
-import java.time.Instant
 import java.util.UUID
 
 import com.outworkers.phantom.connectors.KeySpace
@@ -7,7 +6,8 @@ import com.outworkers.phantom.dsl.ResultSet
 import db.phantom.database.LocalIncomeDatabase
 import db.phantom.entity.Income
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 /**
   *Cassandra service object
@@ -61,14 +61,11 @@ object CassandraService {
     LocalIncomeDatabase.Incomes.deleteById(id)
   }
 
-
-  def getRowsBySymbol1H(symbol: String) ={
-    val timestamp=Instant.now.getEpochSecond-3600L
-    ""
+  def getLastPredictions(limit:Int) = {
+    val rsIncomes = getIncomes(limit)
+    val result = Await.result(rsIncomes, 5 seconds).all().toArray.toList
+    val rows = result.map(row => row)
+    println(rows)
   }
 
-  def getRowsBySymbol2H(symbol: String) ={
-    val timestamp=Instant.now.getEpochSecond-72000L
-    ""
-  }
 }
